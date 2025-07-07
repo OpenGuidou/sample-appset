@@ -14,6 +14,7 @@ spec:
   template:
     metadata:
       name: 'my-app-{{.version}}'
+      namespace: "my-app"
     spec:
       project: default
       source:
