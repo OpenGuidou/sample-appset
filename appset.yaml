@@ -21,7 +21,7 @@ spec:
         targetRevision: HEAD
         path: .
       destination:
-        server: 'in-cluster'
+        name: 'in-cluster'
         namespace: 'my-app-{{.version}}'
       syncPolicy:
         automated:
