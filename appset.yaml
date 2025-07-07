@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: sample-appset
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - list:
+      elements:
+      - version: one
+      - version: two
+      - version: three
+  template:
+    metadata:
+      name: 'my-app-{{.version}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/OpenGuidou/simple-configmap.git
+        targetRevision: HEAD
+        path: .
+      destination:
+        server: 'in-cluster'
+        namespace: 'my-app-{{.version}}'
+      syncPolicy:
+        automated:
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
