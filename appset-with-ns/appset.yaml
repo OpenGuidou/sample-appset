@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: sample-appset
+  namespace: argocd-e2e
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - list:
+      elements:
+      - version: one
+      - version: two
+      - version: three
+  template:
+    metadata:
+      name: 'my-app-{{.version}}'
+      namespace: "argocd-e2e"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/OpenGuidou/simple-configmap.git
+        targetRevision: HEAD
+        path: .
+      destination:
+        name: 'in-cluster'
+        namespace: 'my-app-{{.version}}-in-ns'
+      syncPolicy:
+        automated:
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
