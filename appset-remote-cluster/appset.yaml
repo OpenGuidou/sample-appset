@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: sample-appset
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          argocd.argoproj.io/secret-type: cluster
+  template:
+    metadata:
+      name: 'my-app-{{.name}}'
+      namespace: "my-app"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/OpenGuidou/sample-appset.git
+        targetRevision: HEAD
+        path: cm-with-finalizer/
+      destination:
+        name: 'in-cluster'
+        namespace: 'my-app-{{.name}}'
+      syncPolicy:
+        automated:
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
