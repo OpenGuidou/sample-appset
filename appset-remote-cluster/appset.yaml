@@ -21,7 +21,7 @@ spec:
         targetRevision: HEAD
         path: cm-with-finalizer/
       destination:
-        name: 'in-cluster'
+        name: '{{.name}}'
         namespace: 'my-app-{{.name}}'
       syncPolicy:
         automated:
